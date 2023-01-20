@@ -1,0 +1,22 @@
+// ATR range breakout with volatility filtration trading strategy
+//@version=4
+study("ATR range breakout with volatility filtration trading strategy", overlay=true)
+
+// Define ATR
+atrLength = input(14, minval=1, title="ATR Length")
+atrMult = input(2.5, minval=1, title="ATR Multiplier")
+atr = atr(atrLength)
+
+// Define volatility
+volLength = input(14, minval=1, title="Volatility Length")
+volMult = input(2, minval=1, title="Volatility Multiplier")
+vol = stdev(close, volLength)
+
+// Define buy and sell conditions
+buy = crossover(close, high - atrMult * atr) and vol < volMult * vol[1]
+sell = crossunder(close, low + atrMult * atr) and vol < volMult * vol[1]
+
+// Plot buy and sell conditions
+bgcolor(buy ? #00FF00 : sell ? #FF0000 : na)
+plotshape(buy, style=shape.triangleup, color=#00FF00, location=location.belowbar, size=size.small, text="BUY")
+plotshape(sell, style=shape.triangledown, color=#FF0000, location=location.abovebar, size=size.small, text="SELL")
