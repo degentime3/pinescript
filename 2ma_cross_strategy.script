@@ -1,0 +1,24 @@
+// This strategy uses two moving averages (MA) to generate buy and sell signals.
+
+//@version=4
+study("2 MA Trading Strategy", overlay=true)
+
+//Inputs
+length1 = input(title="Length 1", type=input.integer, defval=10)
+length2 = input(title="Length 2", type=input.integer, defval=20)
+
+//Calculate moving averages
+ma1 = sma(close, length1)
+ma2 = sma(close, length2)
+
+//Plot the moving averages
+plot(ma1, color=blue, linewidth=2)
+plot(ma2, color=red, linewidth=2)
+
+//Generate buy and sell signals
+buy = crossover(ma1, ma2)
+sell = crossunder(ma1, ma2)
+
+//Plot buy and sell signals
+plotshape(buy, style=shape.triangleup, location=location.belowbar, color=green, text="BUY")
+plotshape(sell, style=shape.triangledown, location=location.abovebar, color=red, text="SELL")
